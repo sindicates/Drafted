@@ -1,5 +1,6 @@
 
 def resolve_jurisdiction(usr_input: str) -> dict:
+    
     return {
         "jurisdiction": {
             "state": "California",
