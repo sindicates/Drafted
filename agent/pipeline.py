@@ -21,4 +21,23 @@ SAMPLE_USER_INPUT = "I work at a restaurant in San Francisco, California. My emp
 if __name__ == "__main__":
     message = sys.argv[1] if len(sys.argv) > 1 else "I was laid off from my job and I need help finding a new one."
     
-    print(classify_legal_issue(SAMPLE_USER_INPUT))
+    classifier_result = classify_legal_issue(SAMPLE_USER_INPUT)
+    
+    
+    
+    domain = classifier_result.get("primary_domain", "not found")
+    sub_type = classifier_result.get("sub_type", "not found")
+    urgency = classifier_result.get("urgency", "not found")
+    flags = classifier_result.get("ambiguity_flags", [])
+    keywords = classifier_result.get("keywords_matched", [])
+
+    jurisdiction_result = resolve_jurisdiction(domain, sub_type, urgency, flags, keywords)
+
+    relevant_court = jurisdiction_result["court_info"]["relevant_court"]
+    statutes = jurisdiction_result["statutes"]
+
+    print(f"Relevant Court: {relevant_court}")
+    print(f"Statutes: {statutes}")
+
+
+    

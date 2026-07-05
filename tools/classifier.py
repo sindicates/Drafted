@@ -34,7 +34,7 @@ class PrimaryDomain(str, Enum):
     OTHER = "other"
 
 class Urgency(str, Enum):
-    
+
     LOW = "low"
     MEDIUM = "medium"
     HIGH = "high"
@@ -62,7 +62,7 @@ class LegalIssueClassifier(BaseModel):
 
 def classify_legal_issue(user_input: str) -> dict:
 
-    SYSTEM_PROMPT = load_prompt()
+    CLASSIFIER_PROMPT = load_prompt()
         
     response = client.beta.chat.completions.parse(
 
@@ -70,7 +70,7 @@ def classify_legal_issue(user_input: str) -> dict:
 
         messages = [
 
-            { "role": "system", "content": SYSTEM_PROMPT },
+            { "role": "system", "content": CLASSIFIER_PROMPT },
             { "role": "user", "content": user_input }
 
         ],
