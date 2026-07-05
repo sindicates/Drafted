@@ -2,9 +2,9 @@
 
 set -e
 
-python3 -m venv venv
-source venv/bin/activate
+python3.11 -m venv .venv
+source .venv/bin/activate
 pip install --upgrade pip
 pip install -r requirements.txt
 
-echo "Environment setup complete. Run 'source venv/bin/activate' to activate the virtual environment."
+echo "Environment setup complete. Run 'source .venv/bin/activate' to activate the virtual environment."
