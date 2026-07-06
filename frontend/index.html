@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Legal Aid Triage</title>
+    <!-- Fonts: Newsreader for display, Outfit for body -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Newsreader:ital,opsz,wght@0,6..72,200..800;1,6..72,200..800&family=Outfit:wght@100..900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="console">
+            <header>
+                <h1>The Counselor</h1>
+                <p>Describe your situation in detail. We will analyze the facts, determine the jurisdiction, and prepare an official intake document.</p>
+            </header>
+            
+            <main>
+                <div id="input-section" class="section active" style="display: flex;">
+                    <form id="triage-form">
+                        <textarea id="situation" placeholder="I was recently laid off..." required></textarea>
+                        <button type="submit" id="analyze-btn">Analyze Situation</button>
+                    </form>
+                </div>
+
+                <div id="processing-section" class="section hidden">
+                    <div class="skeleton-doc">
+                        <div class="skel-title"></div>
+                        <div class="skel-line w-full"></div>
+                        <div class="skel-line w-3-4"></div>
+                        <div class="skel-line w-full"></div>
+                        <div class="skel-line w-5-6"></div>
+                        <div class="skel-line w-1-2"></div>
+                    </div>
+                    <p class="status-text">Drafting intake document and resolving jurisdiction...</p>
+                </div>
+
+                <div id="result-section" class="section hidden">
+                    <h2>Intake Summary</h2>
+                    <div id="result-content" class="document">
+                        <!-- Result from API will be rendered here -->
+                    </div>
+                    <button id="reset-btn" class="secondary-btn">New Case</button>
+                </div>
+            </main>
+
+            <footer>
+                <p class="disclaimer">Note: This system provides an automated analysis for legal aid intake purposes. It does not constitute official legal advice.</p>
+            </footer>
+        </div>
+    <script src="https://cdn.jsdelivr.net/npm/marked/marked.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>

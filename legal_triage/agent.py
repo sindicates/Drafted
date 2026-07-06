@@ -41,6 +41,7 @@ from dotenv import load_dotenv
 from mcp import StdioServerParameters
 from google.adk.agents import Agent
 from google.adk.models.lite_llm import LiteLlm
+from google.adk.tools import AgentTool
 from google.adk.tools.mcp_tool import McpToolset
 from google.adk.tools.mcp_tool.mcp_session_manager import StdioConnectionParams
 
@@ -73,6 +74,7 @@ mcp_toolset = McpToolset(
                 **os.environ,
             },
         ),
+        timeout=120.0,  # Increase timeout to 120s to allow LLM/web-search to complete
     ),
     # Only expose the two tools this agent needs
     tool_filter=["get_statute_summary", "search_legal_aid_orgs"],
@@ -85,7 +87,7 @@ mcp_toolset = McpToolset(
 # Uses "task" mode so the orchestrator gets a typed result via finish_task.
 
 issue_classifier = Agent(
-    name="issue_classifier",
+    name="classify_legal_issue",
     model=LiteLlm(model="openai/gpt-4o-mini"),
     description=(
         "Classifies a free-text legal situation description into a structured "
@@ -93,9 +95,6 @@ issue_classifier = Agent(
         "ambiguity_flags, urgency, secondary_domains, and keywords_matched."
     ),
     instruction=build_system_prompt("classifier.MD"),
-    # task mode: orchestrator gets a finish_task tool; classifier calls it
-    # when done instead of returning a conversational reply.
-    mode="task",
     output_key="classification_result",
 )
 
@@ -106,7 +105,7 @@ issue_classifier = Agent(
 # with statutes, local ordinances, and court info.
 
 jurisdiction_resolver = Agent(
-    name="jurisdiction_resolver",
+    name="resolve_jurisdiction",
     model=LiteLlm(model="openai/gpt-4o-mini"),
     description=(
         "Resolves the governing bodies of law (federal statutes, state statutes, "
@@ -114,7 +113,6 @@ jurisdiction_resolver = Agent(
         "and jurisdiction (state, city). Returns a structured JSON object."
     ),
     instruction=build_system_prompt("jurisdiction_resolver.MD"),
-    mode="task",
     output_key="jurisdiction_result",
 )
 
@@ -133,8 +131,9 @@ root_agent = Agent(
         "via MCP, find legal aid organisations via MCP, and draft the intake summary."
     ),
     instruction=_ORCHESTRATOR_INSTRUCTION,
-    sub_agents=[issue_classifier, jurisdiction_resolver],
     tools=[
+        AgentTool(issue_classifier),
+        AgentTool(jurisdiction_resolver),
         # MCP tools: get_statute_summary, search_legal_aid_orgs
         mcp_toolset,
         # Local function tool: final intake document generator

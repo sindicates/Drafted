@@ -4,3 +4,5 @@ mcp
 pydantic
 python-dotenv
 ddgs
+fastapi
+uvicorn
