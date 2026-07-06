@@ -1,4 +1,6 @@
 google-adk
+openai
 mcp
 pydantic
 python-dotenv
+ddgs
